@@ -1,6 +1,6 @@
 fun double L =
-  let val Mult2 = fn X => X * 2
-  in  map(Mult2,L);
+  let val Mult2 = map(fn X => X * 2)
+  in  Mult2(L);
 
 fun map F [H|T] =
   let val Hd = F(H)
