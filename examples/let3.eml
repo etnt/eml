@@ -1,0 +1,5 @@
+fun foo X =
+  let val Z = X + 1
+      val Y = Z + X + 1
+  in Y;
+

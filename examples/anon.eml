@@ -1,0 +1,10 @@
+fun double L =
+  let val Mult2 = fn X => X * 2
+  in  map(Mult2,L);
+
+fun map F [H|T] =
+  let val Hd = F(H)
+      val Tl = map(F,T)
+  in
+    [Hd|Tl]
+ | map _ [] = [];

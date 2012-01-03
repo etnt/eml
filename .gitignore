@@ -1,0 +1,11 @@
+.eunit/
+deps/
+src/eml_lexer.erl
+src/eml_parser.erl
+*~
+ebin/*.beam
+ebin/*.app
+examples/*.erl
+examples/*.beam
+examples/*.compile
+examples/*.parse

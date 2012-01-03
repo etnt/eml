@@ -1,0 +1,6 @@
+
+fun split X =
+  let val Even = [Y || Y <- X, (Y rem 2) ==  0]
+      val Odd  = [Y || Y <- X, (Y rem 2) =/= 0]
+  in 
+      {Even,Odd};

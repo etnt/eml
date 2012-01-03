@@ -1,0 +1,4 @@
+fun foo X Y =
+  let val Z = X + Y + 4
+      val W = X - Y
+  in {Z,W};

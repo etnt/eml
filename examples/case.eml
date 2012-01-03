@@ -1,0 +1,4 @@
+fun is_even X =
+  case X rem 2 of
+    0 => true
+  | _ => false;

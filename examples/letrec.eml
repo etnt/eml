@@ -1,0 +1,4 @@
+fun foo L =
+  let rec Len = fn [] => 0 | fn [_|T] => 1 + Len(T)
+  in Len(L);
+

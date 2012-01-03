@@ -1,0 +1,5 @@
+{application, eml, [
+  {description, "Erlang flavored by some ML."},
+  {vsn, "0.1.0"},
+  {env, []}
+]}.

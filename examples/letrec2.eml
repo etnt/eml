@@ -1,0 +1,6 @@
+fun foo =
+  let val X = [1,2,3]
+      val Y = [a,b,c]
+      rec Zip = fn [] [] => [] | fn [A|B] [H|T] => [{A,H} | Zip(B,T)]
+  in Zip(X,Y);
+

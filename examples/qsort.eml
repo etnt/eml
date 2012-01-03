@@ -1,0 +1,6 @@
+fun qsort [H|T] =
+  let val GrEq = qsort([X || X <- T, X >= H])
+      val Le   = qsort([X || X <- T, X <  H])
+  in
+    GrEq ++ [H] ++ Le
+ |  qsort [] = [];
