@@ -42,5 +42,5 @@ by adding the following to your rebar.config file:
     {plugins, [ rebar_eml_plugin ]}.
     {plugin_dir, "deps/rebar_eml_plugin/src"}.
 
-[1]: https://github.com/etnt/eml
+[1]: https://github.com/etnt/eml_examples
 
