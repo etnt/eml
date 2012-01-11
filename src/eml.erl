@@ -1,7 +1,7 @@
 %% -------------------------------------------------------------------
 %% Created: 22 Dec 2011 by etnt@redhoterlang.com
 %%
-%% @doc Erlang flavoured by Some ML
+%% @doc Erlang flavored by Some ML
 %%
 %% -------------------------------------------------------------------
 -module(eml).
@@ -152,6 +152,21 @@ parser_test_() ->
     [
 
 
+     ?_assertMatch({ok,[{function,1,foo,0,
+                         [{clause,1,[],[],
+                           [{call,1,
+                             {atom,1,foldl},
+                             [{op_fun,1,'+'},
+                              {integer,1,0},
+                              {cons,1,
+                               {integer,1,1},
+                               {cons,1,
+                                {integer,1,2},
+                                {cons,1,{integer,1,3},{nil,1}}}}]}]}]}]
+                   },
+                   p("fun foo = foldl(@+, 0, [1,2,3]);"))
+
+
 %     ?_assertMatch({ok,
 %                    {function,1,len,1,
 %                     [{clause,1,
@@ -181,6 +196,8 @@ parser_test_() ->
 
 lexer_test_() ->
     [
+
+     
      ?_assertMatch({ok,[{atom,1,len},
                         {'[',1},
                         {atom,1,h},
@@ -198,9 +215,25 @@ lexer_test_() ->
                         {'=',2},
                         {integer,2,0}],
                     2},
-                   lexer("len [h|t] = 1 + len t\nlen [] = 0"))
+                   l("len [h|t] = 1 + len t\nlen [] = 0"))
 
-     
+     ,?_assertMatch({ok,[{atom,1,foldl},
+                         {'(',1},
+                         {'@+',1},
+                         {',',1},
+                         {integer,1,0},
+                         {',',1},
+                         {'[',1},
+                         {integer,1,1},
+                         {',',1},
+                         {integer,1,2},
+                         {',',1},
+                         {integer,1,3},
+                         {']',1},
+                         {')',1}],
+                     1},
+                    l("foldl(@+, 0, [1,2,3])"))
+
     ].
 
 e2(T) when is_tuple(T) -> element(2, T).

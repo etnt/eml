@@ -1,0 +1,16 @@
+fun f1 0 = 1
+ |  f1 N = N * f1(N-1);
+
+
+fun f2 N =
+  let val Mult = fn X Y => X * Y
+  in foldl(Mult, 1, lists:seq(1,N));
+
+% Want to be able to do something like this:
+%fun f3 N = foldl(@*, 1, [1..N]);
+
+fun f3 N = foldl(@*, 1, lists:seq(1,N));
+
+
+fun foldl Fun Acc [H|T] = foldl(Fun, Fun(H,Acc), T)
+ |  foldl _   Acc []    = Acc;

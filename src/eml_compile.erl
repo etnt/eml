@@ -60,6 +60,9 @@ r({'fun',Line,{clauses,Clauses}}) ->
 r({clause,Line,FormalArgs,Guards,Exprs}) ->
     {clause,Line,FormalArgs,Guards,[r(E) || E <- Exprs]};
 
+r({call,Line,Fun,Args}) ->
+    {call,Line,Fun,[r(A) || A <- Args]};
+
 r({'let',Line,[{val,_Line,FormalArg,ActualArg}|E],Exprs}) ->
     %%
     %% We transform a let as described in SPJ:
@@ -100,7 +103,6 @@ r({'let',_Line,[],Exprs}) ->
     [r(E) || E <- Exprs];
 
 
-
 r({'case', Line, Expr, Clauses}) ->
     %%
     %% We transform case expressions as:
@@ -113,6 +115,19 @@ r({'case', Line, Expr, Clauses}) ->
          [{val, Line, {var, Line, Var}, Expr}],
          [{call, Line, {'fun', Line, {clauses, Clauses}}, [{var, Line, Var}]}]},
     r(R);
+
+
+r({op_fun, Line, Op}) ->
+    %%
+    %% Corresponds to '@+' as in: foldl(@+, 0, [1,2,3])
+    %%
+    {'fun',Line,
+     {clauses,
+      [{clause,Line,
+        [{var,Line,'X'},{var,Line,'Y'}],
+        [],
+        [{op,Line,Op,{var,Line,'X'},{var,Line,'Y'}}]}]}};
+
 
 r(ParseTree) ->
     ParseTree.

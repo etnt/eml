@@ -35,6 +35,7 @@ case_expr cr_clauses cr_clause
 function function_call function_clause
 fun_expr fun_clauses fun_clause fun_clause_head fun_cr_clause_body
 guard guard_call guard_expr
+op_fun_expr
 let_expr val_exprs val_expr
 list_comprehension binary_comprehension
 lc_exprs lc_expr binary bin_elements bin_element bit_expr
@@ -53,6 +54,7 @@ Terminals
 'fun' 'val' 'rec'
 'bor' 'bsl' 'bsr' 'bxor' 'div' 'let' 'in' 'fn' '=>'
 'case' 'of'
+'@+' '@-' '@*' '@/'
 'orelse' 'andalso' 'not' 'and' 'or' 'xor' '++' '--'
 'rem' '{' '|' '||' '}' 'when' atom float integer string var.
 
@@ -207,6 +209,7 @@ expr_max -> '(' expr ')' : '$2'.
 %%expr_max -> if_expr : '$1'.
 expr_max -> case_expr : '$1'.
 %%expr_max -> receive_expr : '$1'.
+expr_max -> op_fun_expr : '$1'.
 expr_max -> fun_expr : '$1'.
 %%expr_max -> try_expr : '$1'.
 %%expr_max -> query_expr : '$1'.
@@ -251,6 +254,18 @@ cr_clauses -> cr_clause '|' cr_clauses : ['$1' | '$3'].
 cr_clause -> formal_parameter_list clause_guard fun_cr_clause_body :
         {clause,?line(hd('$1')),'$1','$2','$3'}.
 
+
+%% -----------------------------------------------------------------
+%% OP FUN EXPRESSION
+%% ---------------
+%%
+%%  @<OP>  ,  where <OP> ::= + | + | * | /
+%%
+%% -----------------------------------------------------------------
+op_fun_expr -> '@+' : {op_fun, ?line('$1'), '+'}.
+op_fun_expr -> '@-' : {op_fun, ?line('$1'), '-'}.
+op_fun_expr -> '@*' : {op_fun, ?line('$1'), '*'}.
+op_fun_expr -> '@/' : {op_fun, ?line('$1'), '/'}.
 
 %% -----------------------------------------------------------------
 %% FUN EXPRESSION
