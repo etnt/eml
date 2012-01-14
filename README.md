@@ -3,7 +3,9 @@
 There are no Erlang receive,send or match expressions in EML.
 
 Instead there is let and a type of letrec construct as
-well as currying.
+well as currying. Inspired from Haskel, there is also a way 
+to express generation of a list of integers and to represent 
+arithmetic operators as an anonymous function.
 Currently, only program transformation is done, mainly 
 inspired by the classic SPJ book.
 
@@ -27,6 +29,13 @@ Example 2:
       in
         [Hd|Tl]
      | map _ [] = [];
+
+Example 3:
+
+    fun f3 N = foldl(@*, 1, [1..N]);
+    
+    fun foldl Fun Acc [H|T] = foldl(Fun, Fun(H,Acc), T)
+     |  foldl _   Acc []    = Acc;
 
 If you want to try it out you can either clone the 
 [eml_examples.git][1] repo which setup the eml
