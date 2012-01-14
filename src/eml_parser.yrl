@@ -23,7 +23,7 @@
 %%
 Nonterminals
 prefix_op add_op comp_op list_op
-attribute atomic basic_type bif_test
+attribute atomic basic_type bif_test integer_or_var
 clause_body
 clause_guard clause_head
 expr expr_100 expr_150 expr_160 expr_200 expr_300 expr_400 expr_500
@@ -35,6 +35,7 @@ case_expr cr_clauses cr_clause
 function function_call function_clause
 fun_expr fun_clauses fun_clause fun_clause_head fun_cr_clause_body
 guard guard_call guard_expr
+op_fun_expr
 let_expr val_exprs val_expr
 list_comprehension binary_comprehension
 lc_exprs lc_expr binary bin_elements bin_element bit_expr
@@ -51,8 +52,9 @@ Terminals
 '(' ')' '*' '+' ',' '-' '/' '/=' ':' ';' '<' '=' '=/=' '=:='
 '<<' '>>' '<-' '<=' '=<' '==' '>' '>=' '[' ']' '.' 'band' 'bnot' 
 'fun' 'val' 'rec'
-'bor' 'bsl' 'bsr' 'bxor' 'div' 'let' 'in' 'fn' '=>'
+'bor' 'bsl' 'bsr' 'bxor' 'div' 'let' 'in' 'fn' '=>' 'by'
 'case' 'of'
+'@+' '@-' '@*' '@/' '..'
 'orelse' 'andalso' 'not' 'and' 'or' 'xor' '++' '--'
 'rem' '{' '|' '||' '}' 'when' atom float integer string var.
 
@@ -207,6 +209,7 @@ expr_max -> '(' expr ')' : '$2'.
 %%expr_max -> if_expr : '$1'.
 expr_max -> case_expr : '$1'.
 %%expr_max -> receive_expr : '$1'.
+expr_max -> op_fun_expr : '$1'.
 expr_max -> fun_expr : '$1'.
 %%expr_max -> try_expr : '$1'.
 %%expr_max -> query_expr : '$1'.
@@ -216,11 +219,18 @@ basic_type -> atomic : '$1'.
 basic_type -> var : '$1'.
 
 list -> '[' ']' : {nil, ?line('$1')}.
+list -> '[' integer_or_var '..' integer_or_var ']' :
+     {range, ?line('$1'), '$2', '$4', {integer,?line('$1'),1}}.
+list -> '[' integer_or_var '..' integer_or_var 'by' integer_or_var ']':
+     {range, ?line('$1'), '$2', '$4', '$6'}.
 list -> '[' expr expr_tail ']' :
    case '$3' of
        {nil,0} -> {cons, ?line('$1'), '$2', {nil, ?line('$1')}};
        _       -> {cons, ?line('$1'), '$2', '$3'}
    end.
+
+integer_or_var -> integer : '$1'.
+integer_or_var -> var     : '$1'.
 
 expr_tail -> '|' expr : '$2'.
 expr_tail -> ',' expr expr_tail :
@@ -251,6 +261,18 @@ cr_clauses -> cr_clause '|' cr_clauses : ['$1' | '$3'].
 cr_clause -> formal_parameter_list clause_guard fun_cr_clause_body :
         {clause,?line(hd('$1')),'$1','$2','$3'}.
 
+
+%% -----------------------------------------------------------------
+%% OP FUN EXPRESSION
+%% ---------------
+%%
+%%  @<OP>  ,  where <OP> ::= + | + | * | /
+%%
+%% -----------------------------------------------------------------
+op_fun_expr -> '@+' : {op_fun, ?line('$1'), '+'}.
+op_fun_expr -> '@-' : {op_fun, ?line('$1'), '-'}.
+op_fun_expr -> '@*' : {op_fun, ?line('$1'), '*'}.
+op_fun_expr -> '@/' : {op_fun, ?line('$1'), '/'}.
 
 %% -----------------------------------------------------------------
 %% FUN EXPRESSION

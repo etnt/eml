@@ -80,6 +80,10 @@ Rules.
 
 ::    :  {token,{'::',TokenLine}}.
 
+\.\.  :  {token,{'..',TokenLine}}.
+
+@[\+\-\*/] :  {token,{list_to_atom(TokenChars),TokenLine}}.
+
 []()[}{|!?/;:,.*+#<>=-] :
       {token,{list_to_atom(TokenChars),TokenLine}}.
 
@@ -99,6 +103,7 @@ reserved_word('let') -> true;
 reserved_word('val') -> true;
 reserved_word('rec') -> true;
 reserved_word('in') -> true;
+reserved_word('by') -> true;
 reserved_word('try') -> true;
 reserved_word('catch') -> true;
 reserved_word('andalso') -> true;
