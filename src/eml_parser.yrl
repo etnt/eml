@@ -23,7 +23,7 @@
 %%
 Nonterminals
 prefix_op add_op comp_op list_op
-attribute atomic basic_type bif_test
+attribute atomic basic_type bif_test integer_or_var
 clause_body
 clause_guard clause_head
 expr expr_100 expr_150 expr_160 expr_200 expr_300 expr_400 expr_500
@@ -52,9 +52,9 @@ Terminals
 '(' ')' '*' '+' ',' '-' '/' '/=' ':' ';' '<' '=' '=/=' '=:='
 '<<' '>>' '<-' '<=' '=<' '==' '>' '>=' '[' ']' '.' 'band' 'bnot' 
 'fun' 'val' 'rec'
-'bor' 'bsl' 'bsr' 'bxor' 'div' 'let' 'in' 'fn' '=>'
+'bor' 'bsl' 'bsr' 'bxor' 'div' 'let' 'in' 'fn' '=>' 'by'
 'case' 'of'
-'@+' '@-' '@*' '@/'
+'@+' '@-' '@*' '@/' '..'
 'orelse' 'andalso' 'not' 'and' 'or' 'xor' '++' '--'
 'rem' '{' '|' '||' '}' 'when' atom float integer string var.
 
@@ -219,11 +219,18 @@ basic_type -> atomic : '$1'.
 basic_type -> var : '$1'.
 
 list -> '[' ']' : {nil, ?line('$1')}.
+list -> '[' integer_or_var '..' integer_or_var ']' :
+     {range, ?line('$1'), '$2', '$4', {integer,?line('$1'),1}}.
+list -> '[' integer_or_var '..' integer_or_var 'by' integer_or_var ']':
+     {range, ?line('$1'), '$2', '$4', '$6'}.
 list -> '[' expr expr_tail ']' :
    case '$3' of
        {nil,0} -> {cons, ?line('$1'), '$2', {nil, ?line('$1')}};
        _       -> {cons, ?line('$1'), '$2', '$3'}
    end.
+
+integer_or_var -> integer : '$1'.
+integer_or_var -> var     : '$1'.
 
 expr_tail -> '|' expr : '$2'.
 expr_tail -> ',' expr expr_tail :

@@ -129,6 +129,15 @@ r({op_fun, Line, Op}) ->
         [{op,Line,Op,{var,Line,'X'},{var,Line,'Y'}}]}]}};
 
 
+r({range, Line, From, To, By}) ->
+    %%
+    %% [From..To by By] == lists:seq(From,To,By)
+    %%
+    {call,Line,
+     {remote,Line,{atom,Line,lists},{atom,Line,seq}},
+     [From,To,By]};
+
+
 r(ParseTree) ->
     ParseTree.
 
